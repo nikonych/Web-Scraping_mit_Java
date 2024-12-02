@@ -16,50 +16,50 @@ public class EcommerceScraper implements Scraper {
             int totalPages = getTotalPages(baseUrl);
 
             while (nextPageUrl != null) {
-                // Загрузите HTML-контент текущей страницы
+                // Laden des HTML-Inhalts der aktuellen Seite
                 Document doc = Jsoup.connect(nextPageUrl).get();
                 System.out.println("Seite wird analysiert: " + currentPage + " von " + totalPages);
 
-                // Находим список продуктов по селектору CSS класса 'products'
+                // Finden der Produktliste mit dem CSS-Selektor für die Klasse 'products'
                 Elements products = doc.select("ul.products li.product");
 
-                // Парсинг информации о продуктах на текущей странице
+                // Parsen der Produktinformationen auf der aktuellen Seite
                 for (Element product : products) {
-                    // Извлекаем название продукта
+                    // Extrahieren des Produktnamens
                     String name = product.select("h2.product-name").text();
 
-                    // Извлекаем цену продукта
+                    // Extrahieren des Produktpreises
                     String price = product.select("span.price").text();
 
-                    // Извлекаем ссылку на продукт
+                    // Extrahieren des Links zum Produkt
                     String link = product.select("a.woocommerce-LoopProduct-link").attr("href");
 
-                    // Извлекаем ссылку на изображение продукта
+                    // Extrahieren des Bild-URLs des Produkts
                     String imageUrl = product.select("img").attr("src");
 
-                    // Печатаем полученную информацию о продукте
+                    // Drucken der gesammelten Produktinformationen
                     System.out.println("Produktname: " + name);
                     System.out.println("Preis: " + price);
                     System.out.println("Link: " + link);
-                    System.out.println("Bild URL: " + imageUrl);
+                    System.out.println("Bild-URL: " + imageUrl);
 
-                    // Получаем дополнительную информацию о продукте
+                    // Abrufen weiterer Informationen zum Produkt
                     getProductDetails(link);
 
                     System.out.println("-------------------------------");
                 }
 
-                // Вычисление и вывод процента завершения
+                // Berechnung und Ausgabe des Fortschritts in Prozent
                 double progress = (double) currentPage / totalPages * 100;
                 System.out.printf("Fortschritt: %.2f%%\n", progress);
 
-                // Переход к следующей странице
+                // Wechsel zur nächsten Seite
                 Element nextPageElement = doc.selectFirst("a.next.page-numbers");
                 if (nextPageElement != null) {
                     nextPageUrl = nextPageElement.attr("href");
                     currentPage++;
                 } else {
-                    nextPageUrl = null; // Если следующей страницы нет, заканчиваем цикл
+                    nextPageUrl = null; // Wenn es keine nächste Seite gibt, wird die Schleife beendet
                 }
             }
         } catch (Exception e) {
@@ -67,46 +67,46 @@ public class EcommerceScraper implements Scraper {
         }
     }
 
-    // Метод для получения общего количества страниц
+    // Methode zur Bestimmung der Gesamtanzahl der Seiten
     private static int getTotalPages(String url) {
         try {
             Document doc = Jsoup.connect(url).get();
             Elements pageNumbers = doc.select("ul.page-numbers li a.page-numbers");
             if (pageNumbers.size() > 0) {
-                String lastPageNumber = pageNumbers.get(pageNumbers.size() - 2).text(); // Предпоследний элемент - последняя страница
+                String lastPageNumber = pageNumbers.get(pageNumbers.size() - 2).text(); // Vorletztes Element - letzte Seite
                 return Integer.parseInt(lastPageNumber);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 1; // Возвращаем 1 по умолчанию, если не удалось определить количество страниц
+        return 1; // Standardmäßig 1 zurückgeben, wenn die Gesamtanzahl der Seiten nicht ermittelt werden kann
     }
 
-    // Метод для получения информации о товаре
+    // Methode zum Abrufen der Produktinformationen
     private static void getProductDetails(String productUrl) {
         try {
             Document doc = Jsoup.connect(productUrl).get();
 
-            // Получаем подробное описание продукта
+            // Abrufen der detaillierten Beschreibung des Produkts
             String description = doc.selectFirst("#tab-description p").text();
             System.out.println("Beschreibung: " + description);
 
-            // Получаем дополнительную информацию, если она доступна
+            // Abrufen zusätzlicher Informationen, falls verfügbar
             Element additionalInfoElement = doc.selectFirst("#tab-additional_information");
             if (additionalInfoElement != null) {
                 String additionalInfo = additionalInfoElement.text();
                 System.out.println("Zusätzliche Informationen: " + additionalInfo);
             }
 
-            // Извлекаем SKU
+            // Extrahieren der SKU
             String sku = doc.selectFirst(".sku").text();
             System.out.println("SKU: " + sku);
 
-            // Извлекаем категорию
+            // Extrahieren der Kategorie
             String category = doc.selectFirst(".posted_in a").text();
             System.out.println("Kategorie: " + category);
 
-            // Добавьте задержку для предотвращения перегрузки сервера
+            // Verzögerung hinzufügen, um den Server nicht zu überlasten
             Thread.sleep(1000);
 
         } catch (Exception e) {

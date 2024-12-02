@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        // Array of scraper instances implementing the Scraper interface
+        // Array von Scraper-Instanzen, die das Scraper-Interface implementieren
         Scraper[] scrapers = {
                 new EcommerceScraper(),
                 new InfiniteScrollScraper(),
@@ -17,16 +17,16 @@ public class Main {
                 new LoginScraper()
         };
 
-        String[] options = {"E-Commerce Seite", "Infinite Scrolling Seite", "JS Rendering Seite", "Login Seite", "Andere Seite (nicht verfügbar)"};
+        String[] options = {"E-Commerce-Seite", "Infinite-Scrolling-Seite", "JS-Rendering-Seite", "Login-Seite", "Andere Seite (nicht verfügbar)"};
         int choice = JOptionPane.showOptionDialog(null,
                 "Wählen Sie die Website, die Sie parsen möchten:",
-                "Website Auswahl",
+                "Website-Auswahl",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
                 options,
                 options[0]);
 
         if (choice >= 0 && choice < scrapers.length) {
-            System.out.println("Sie haben " + options[choice] + " gewählt.");
+            System.out.println("Sie haben die Option '" + options[choice] + "' gewählt.");
             scrapers[choice].scrape();
         } else {
             System.out.println("Keine gültige Auswahl getroffen.");

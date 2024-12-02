@@ -13,9 +13,9 @@ import org.scraping.Scraper;
 public class JavaScriptRenderingScraper implements Scraper {
     @Override
     public void scrape() {
-        System.setProperty("webdriver.chrome.driver", "drivers/chromedriver");  // Set the path to your chromedriver
+        System.setProperty("webdriver.chrome.driver", "drivers/chromedriver");  // Pfad zum Chromedriver angeben
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // Run in headless mode for faster scraping
+        options.addArguments("--headless"); // Im Headless-Modus für schnelleres Scraping ausführen
         WebDriver driver = new ChromeDriver(options);
 
         String url = "https://www.scrapingcourse.com/javascript-rendering";
@@ -25,10 +25,10 @@ public class JavaScriptRenderingScraper implements Scraper {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             boolean hasMoreContent = true;
 
-            // Keep scrolling until no more content is loaded
+            // Scrollen, bis keine weiteren Inhalte mehr geladen werden
             while (hasMoreContent) {
                 js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-                Thread.sleep(2000); // Wait for new content to load
+                Thread.sleep(2000); // Warten, bis neue Inhalte geladen werden
 
                 Document doc = Jsoup.parse(driver.getPageSource());
                 Elements products = doc.select(".product-item");
@@ -39,14 +39,14 @@ public class JavaScriptRenderingScraper implements Scraper {
                     String link = product.select("a.product-link").attr("href");
                     String imageUrl = product.select("img.product-image").attr("src");
 
-                    System.out.println("Product Name: " + name);
-                    System.out.println("Price: " + price);
+                    System.out.println("Produktname: " + name);
+                    System.out.println("Preis: " + price);
                     System.out.println("Link: " + link);
-                    System.out.println("Image URL: " + imageUrl);
+                    System.out.println("Bild-URL: " + imageUrl);
                     System.out.println("-------------------------------");
                 }
 
-                // Check if we've reached the end of the content
+                // Prüfen, ob das Ende der Inhalte erreicht ist
                 hasMoreContent = doc.select("#end-of-page").isEmpty();
             }
         } catch (Exception e) {

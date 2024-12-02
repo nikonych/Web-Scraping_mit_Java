@@ -16,52 +16,52 @@ import java.util.Set;
 public class InfiniteScrollScraper implements Scraper {
     @Override
     public void scrape() {
-        // Set up WebDriver
-        System.setProperty("webdriver.chrome.driver", "drivers/chromedriver");  // Specify the path to your chromedriver
+        // Einrichten des WebDrivers
+        System.setProperty("webdriver.chrome.driver", "drivers/chromedriver");  // Pfad zum Chromedriver angeben
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // Run in headless mode
+        options.addArguments("--headless"); // Im headless-Modus ausführen
         WebDriver driver = new ChromeDriver(options);
 
-        // Define the URL to scrape
+        // Definieren der zu scrappenden URL
         String url = "https://www.scrapingcourse.com/infinite-scrolling";
         driver.get(url);
 
         try {
-            // Store unique product data to avoid duplicates
+            // Speichern von einzigartigen Produktdaten, um Duplikate zu vermeiden
             Set<String> productLinks = new HashSet<>();
             boolean hasMoreContent = true;
 
             while (hasMoreContent) {
-                // Scroll to the bottom of the page to trigger loading of more content
+                // Scrollen zum Ende der Seite, um das Laden weiterer Inhalte auszulösen
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
 
-                // Give some time for the new products to load
+                // Zeit geben, damit neue Produkte geladen werden
                 Thread.sleep(2000);
 
-                // Parse the current page content
+                // Analysieren des aktuellen Seiteninhalts
                 Document doc = Jsoup.parse(driver.getPageSource());
                 Elements products = doc.select(".product-item");
 
-                // Extract product information
+                // Extrahieren von Produktinformationen
                 for (Element product : products) {
                     String productName = product.select(".product-name").text();
                     String productPrice = product.select(".product-price").text();
                     String productImage = product.select(".product-image").attr("src");
                     String productLink = product.select("a").attr("href");
 
-                    // Only print new products
+                    // Nur neue Produkte ausgeben
                     if (!productLinks.contains(productLink)) {
                         productLinks.add(productLink);
-                        System.out.println("Product Name: " + productName);
-                        System.out.println("Product Price: " + productPrice);
-                        System.out.println("Product Image: " + productImage);
-                        System.out.println("Product Link: " + productLink);
+                        System.out.println("Produktname: " + productName);
+                        System.out.println("Produktpreis: " + productPrice);
+                        System.out.println("Produktbild: " + productImage);
+                        System.out.println("Produktlink: " + productLink);
                         System.out.println("-------------------------------");
                     }
                 }
 
-                // Check if there's more content to load
+                // Prüfen, ob weitere Inhalte geladen werden können
                 hasMoreContent = !doc.select("#end-of-page").isEmpty();
             }
         } catch (Exception e) {
@@ -71,5 +71,3 @@ public class InfiniteScrollScraper implements Scraper {
         }
     }
 }
-
-
