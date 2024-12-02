@@ -36,10 +36,8 @@ public class InfiniteScrollScraper implements Scraper {
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
 
-                // Zeit geben, damit neue Produkte geladen werden
                 Thread.sleep(2000);
 
-                // Analysieren des aktuellen Seiteninhalts
                 Document doc = Jsoup.parse(driver.getPageSource());
                 Elements products = doc.select(".product-item");
 

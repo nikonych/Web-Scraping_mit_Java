@@ -15,7 +15,7 @@ public class JavaScriptRenderingScraper implements Scraper {
     public void scrape() {
         System.setProperty("webdriver.chrome.driver", "drivers/chromedriver");  // Pfad zum Chromedriver angeben
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // Im Headless-Modus für schnelleres Scraping ausführen
+        options.addArguments("--headless");
         WebDriver driver = new ChromeDriver(options);
 
         String url = "https://www.scrapingcourse.com/javascript-rendering";

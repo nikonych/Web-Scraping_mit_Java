@@ -14,7 +14,7 @@ public class LoginScraper implements Scraper {
     public void scrape() {
         System.setProperty("webdriver.chrome.driver", "drivers/chromedriver");  // Pfad zum Chromedriver angeben
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");  // Optional: Im Headless-Modus für schnellere Ausführung ohne Browserfenster ausführen
+        options.addArguments("--headless");
         WebDriver driver = new ChromeDriver(options);
 
         try {
@@ -35,10 +35,8 @@ public class LoginScraper implements Scraper {
             // Einen Moment warten, bis die Seite nach dem Login geladen ist
             Thread.sleep(2000);
 
-            // Analysieren der Seite nach dem Login
             Document doc = Jsoup.parse(driver.getPageSource());
 
-            // Beispiel für das Scraping von Produktinformationen nach dem Login
             System.out.println("Inhalt nach dem Login gescraped:");
             doc.select(".product-item").forEach(product -> {
                 String name = product.select(".product-name").text();

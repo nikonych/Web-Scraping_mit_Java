@@ -16,7 +16,6 @@ public class EcommerceScraper implements Scraper {
             int totalPages = getTotalPages(baseUrl);
 
             while (nextPageUrl != null) {
-                // Laden des HTML-Inhalts der aktuellen Seite
                 Document doc = Jsoup.connect(nextPageUrl).get();
                 System.out.println("Seite wird analysiert: " + currentPage + " von " + totalPages);
 
@@ -25,19 +24,14 @@ public class EcommerceScraper implements Scraper {
 
                 // Parsen der Produktinformationen auf der aktuellen Seite
                 for (Element product : products) {
-                    // Extrahieren des Produktnamens
                     String name = product.select("h2.product-name").text();
 
-                    // Extrahieren des Produktpreises
                     String price = product.select("span.price").text();
 
-                    // Extrahieren des Links zum Produkt
                     String link = product.select("a.woocommerce-LoopProduct-link").attr("href");
 
-                    // Extrahieren des Bild-URLs des Produkts
                     String imageUrl = product.select("img").attr("src");
 
-                    // Drucken der gesammelten Produktinformationen
                     System.out.println("Produktname: " + name);
                     System.out.println("Preis: " + price);
                     System.out.println("Link: " + link);
@@ -98,11 +92,9 @@ public class EcommerceScraper implements Scraper {
                 System.out.println("Zusätzliche Informationen: " + additionalInfo);
             }
 
-            // Extrahieren der SKU
             String sku = doc.selectFirst(".sku").text();
             System.out.println("SKU: " + sku);
 
-            // Extrahieren der Kategorie
             String category = doc.selectFirst(".posted_in a").text();
             System.out.println("Kategorie: " + category);
 
